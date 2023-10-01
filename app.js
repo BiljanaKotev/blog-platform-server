@@ -1,23 +1,20 @@
 require('dotenv').config();
 
-// ℹ️ Connects to the database
 require('./db');
 
-// Handles http requests (express is node js framework)
-// https://www.npmjs.com/package/express
 const express = require('express');
 
+const { isAuthenticated } = require('./middleware/jwt.middleware');
 const app = express();
 const cors = require('cors');
 
-// 👇 Configure CORS here
+// 👇 Configure CORS
 const corsOptions = {
   origin: 'http://localhost:3000',
   optionsSuccessStatus: 200,
 };
-app.use(cors(corsOptions)); // <-- Add this line
+app.use(cors(corsOptions));
 
-// ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require('./config')(app);
 
 // 👇 Start handling routes here
@@ -26,6 +23,9 @@ app.use('/api', indexRoutes);
 
 const authRoutes = require('./routes/auth.routes');
 app.use('/auth', authRoutes);
+
+const postRoutes = require('./routes/post.routes');
+app.use('/', isAuthenticated, postRoutes);
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require('./error-handling')(app);
