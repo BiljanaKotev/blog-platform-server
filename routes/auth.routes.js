@@ -5,12 +5,9 @@ const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
 
-// Require necessary (isAuthenticated) middleware in order to control access to specific routes
 const { isAuthenticated } = require('../middleware/jwt.middleware.js');
 
-// POST /auth/signup  - Creates a new user in the database
 router.post('/signup', (req, res, next) => {
-  // these keys: email, password, name are coming from the form inputs! they travel through the req.body input name attributes need to match these keys to retrieve the proper data!
   const { email, password, name } = req.body;
   console.log('Testing password:', password);
 
@@ -81,6 +78,8 @@ router.post('/login', (req, res, next) => {
         res.status(401).json({ message: 'User not found.' });
         return;
       }
+      console.log('Provided password:', password);
+      console.log('Stored hashed password:', foundUser.passwordHash);
 
       // Compare the provided password with the one saved in the database
       const passwordCorrect = bcrypt.compareSync(password, foundUser.passwordHash);
