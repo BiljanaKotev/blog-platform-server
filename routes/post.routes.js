@@ -20,8 +20,20 @@ router.post('/blog-post', (req, res, next) => {
   console.log('accessed new post');
   const { coverImg, title, location, description } = req.body;
   Post.create({ coverImg, title, location, description })
-    .then((post) => {
-      res.json(post);
+    .then((newPost) => {
+      res.json(newPost);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.get('/blog-feed', (req, res, next) => {
+  console.log('works');
+  const { coverImg, title, author } = req.body;
+  Post.create({ coverImg, title, author })
+    .then((postFeed) => {
+      res.json(postFeed);
     })
     .catch((err) => {
       next(err);

@@ -18,6 +18,10 @@ const postSchema = new Schema(
       type: String,
       required: [true, 'Description is required.'],
     },
+    author: {
+      type: String,
+      required: [true, 'Description is required'],
+    },
   },
   {
     timestamps: true,
