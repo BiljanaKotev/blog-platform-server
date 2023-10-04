@@ -14,9 +14,9 @@ const postSchema = new Schema(
       type: String,
       required: [true, 'Location is required.'],
     },
-    description: {
+    content: {
       type: String,
-      required: [true, 'Description is required.'],
+      required: [true, 'Content is required.'],
     },
     author: {
       type: String,

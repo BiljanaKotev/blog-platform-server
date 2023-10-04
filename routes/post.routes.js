@@ -16,10 +16,10 @@ router.get('/dashboard', (req, res, next) => {
     });
 });
 
-router.post('/blog-post', (req, res, next) => {
+router.post('/create-post', (req, res, next) => {
   console.log('accessed new post');
-  const { coverImg, title, location, description } = req.body;
-  Post.create({ coverImg, title, location, description })
+  const { coverImg, title, location, content } = req.body;
+  Post.create({ coverImg, title, location, content })
     .then((newPost) => {
       res.json(newPost);
     })
