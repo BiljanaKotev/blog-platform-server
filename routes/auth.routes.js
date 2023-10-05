@@ -9,7 +9,6 @@ const { isAuthenticated } = require('../middleware/jwt.middleware.js');
 
 router.post('/signup', (req, res, next) => {
   const { email, password, name } = req.body;
-  console.log('Testing password:', password);
 
   if (email === '' || password === '' || name === '') {
     res.status(400).json({ message: 'Provide email, password and name' });
@@ -78,8 +77,6 @@ router.post('/login', (req, res, next) => {
         res.status(401).json({ message: 'User not found.' });
         return;
       }
-      console.log('Provided password:', password);
-      console.log('Stored hashed password:', foundUser.passwordHash);
 
       // Compare the provided password with the one saved in the database
       const passwordCorrect = bcrypt.compareSync(password, foundUser.passwordHash);
@@ -94,7 +91,7 @@ router.post('/login', (req, res, next) => {
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
           algorithm: 'HS256',
-          expiresIn: '12h',
+          expiresIn: '48h',
         });
 
         // Send the token as the response
@@ -110,7 +107,6 @@ router.post('/login', (req, res, next) => {
 router.get('/verify', isAuthenticated, (req, res, next) => {
   // If JWT token is valid the payload gets decoded by the
   // isAuthenticated middleware and is made available on `req.payload`
-  console.log(`req.payload`, req.payload);
 
   // Send back the token payload object containing the user data
   res.status(200).json(req.payload);

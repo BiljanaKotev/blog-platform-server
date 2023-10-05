@@ -12,15 +12,15 @@ const postSchema = new Schema(
     },
     location: {
       type: String,
-      required: [true, 'Location is required.'],
     },
     content: {
       type: String,
       required: [true, 'Content is required.'],
     },
     author: {
-      type: String,
-      required: [true, 'Description is required'],
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      // required: true,
     },
   },
   {
