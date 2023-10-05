@@ -40,7 +40,24 @@ router.get('/blog-feed', (req, res, next) => {
     });
 });
 
-router.post('/upload', fileUploader.single('imageUrl'), (req, res, next) => {
+router.get('/blog-feed/:id', (req, res, next) => {
+  const postId = req.params.id;
+
+  Post.findById(postId)
+    .populate('author')
+    .then((postFromDB) => {
+      if (postFromDB) {
+        res.status(200).json(postFromDB);
+      } else {
+        res.status(404).json({ message: 'Post not found' });
+      }
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.post('/upload', fileUploader.single('imgUrl'), (req, res, next) => {
   if (!req.file) {
     next(new Error('No file uploaded!'));
     return;
