@@ -30,5 +30,13 @@ app.use('/api', isAuthenticated, postRoutes);
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require('./error-handling')(app);
 
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).send('Invalid token...');
+  } else {
+    next(err);
+  }
+});
+
 module.exports = app;
 
