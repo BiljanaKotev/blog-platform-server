@@ -35,7 +35,59 @@ router.get('/user-posts', (req, res, next) => {
   Post.find({ author: userId })
     .populate('author')
     .then((userPosts) => {
-      res.status(200).json(userPosts);
+      if (userPosts) {
+        res.status(200).json(userPosts);
+      } else {
+        res.status(404).json({ message: 'Post not found' });
+      }
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+// DELETE USER BLOG POST
+router.delete('/user-posts/:id', (req, res, next) => {
+  const { id } = req.params;
+  Post.findByIdAndDelete(id)
+    .then((userPost) => {
+      if (userPost) {
+        res.status(200).json({ message: 'Post deleted successfully' });
+      } else {
+        res.status(404).json({ message: 'Post not found' });
+      }
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+// EDIT USER BLOG POST
+router.put('/user-posts/:id', (req, res, next) => {
+  const { id } = req.params;
+  const { title, content, coverImg } = req.body;
+
+  Post.findByIdAndUpdate(id, { title, content, coverImg }, { new: true })
+    .then((updatedPost) => {
+      res.json(updatedPost);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+// RETRIEVE ALL USER BLOG POSTS
+router.get('/user-posts/:id', (req, res, next) => {
+  const id = req.params.id;
+
+  Post.findById(id)
+    .populate('author')
+    .then((dbPost) => {
+      if (dbPost) {
+        res.status(200).json(dbPost);
+      } else {
+        res.status(404).json({ message: 'Post not found' });
+      }
     })
     .catch((err) => {
       next(err);
@@ -59,6 +111,7 @@ router.get('/blog-feed', (req, res, next) => {
     });
 });
 
+// RETRIEVE BLOG POST FROM BLOG FEED
 router.get('/blog-feed/:id', (req, res, next) => {
   const postId = req.params.id;
 
@@ -67,23 +120,6 @@ router.get('/blog-feed/:id', (req, res, next) => {
     .then((postFromDB) => {
       if (postFromDB) {
         res.status(200).json(postFromDB);
-      } else {
-        res.status(404).json({ message: 'Post not found' });
-      }
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-router.get('/user-posts/:id', (req, res, next) => {
-  const id = req.params.id;
-
-  Post.findById(id)
-    .populate('author')
-    .then((dbPost) => {
-      if (dbPost) {
-        res.status(200).json(dbPost);
       } else {
         res.status(404).json({ message: 'Post not found' });
       }
@@ -102,6 +138,10 @@ router.post('/upload', fileUploader.single('imgUrl'), (req, res, next) => {
   console.log('Server side fileUrl', responseObject);
   res.json({ fileUrl: req.file.path });
 });
+
+// SEARCH ROUTE
+
+// UPLOADING USER PROFILE PIC TO DASHBOARD
 
 router.post('/update-user-profile-pic', (req, res) => {
   const { userId, profilePicUrl } = req.body;
