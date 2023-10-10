@@ -61,6 +61,7 @@ router.post('/signup', (req, res, next) => {
 
 // POST  /auth/login - Verifies email and password and returns a JWT
 router.post('/login', (req, res, next) => {
+  console.log('Login route hit');
   const { email, password } = req.body;
 
   // Check if email or password are provided as empty string
@@ -83,7 +84,9 @@ router.post('/login', (req, res, next) => {
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { _id, email, name } = foundUser;
+        const { _id, email, name, profilePicUrl } = foundUser;
+        console.log('founder', foundUser);
+        console.log('deconstruct profilePic', profilePicUrl);
 
         // Create an object that will be set as the token payload
         const payload = { _id, email, name };
@@ -95,7 +98,8 @@ router.post('/login', (req, res, next) => {
         });
 
         // Send the token as the response
-        res.status(200).json({ authToken: authToken });
+        res.status(200).json({ authToken: authToken, profilePicUrl: profilePicUrl });
+        console.log('profile-pic', { profilePicUrl: profilePicUrl });
       } else {
         res.status(401).json({ message: 'Unable to authenticate the user' });
       }
