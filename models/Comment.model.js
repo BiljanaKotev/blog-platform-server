@@ -2,9 +2,9 @@ const { Schema, model } = require('mongoose');
 
 const commentSchema = new Schema(
   {
-    content: {
+    text: {
       type: String,
-      required: [true, 'Content is required for the comment.'],
+      required: [true, 'Text is required for the comment.'],
     },
     author: {
       type: Schema.Types.ObjectId,
