@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post.model');
+const User = require('../models/User.model');
+const Comment = require('../models/Comment.model');
 const fileUploader = require('../config/cloudinary.config');
 const { isAuthenticated } = require('../middleware/jwt.middleware');
-const User = require('../models/User.model');
 
 router.get('/dashboard', (req, res, next) => {
   if (!req.payload) {
@@ -76,7 +77,7 @@ router.put('/user-posts/:id', (req, res, next) => {
     });
 });
 
-// RETRIEVE ALL USER BLOG POSTS
+// RETRIEVE SINGLE BLOG POST
 router.get('/user-posts/:id', (req, res, next) => {
   const id = req.params.id;
 
@@ -111,7 +112,21 @@ router.get('/blog-feed', (req, res, next) => {
     });
 });
 
-// RETRIEVE BLOG POST FROM BLOG FEED
+// RETRIEVE COMMENTS FROM SINGLE BLOG POST
+router.get('/blog-feed/:id/comments', (req, res, next) => {
+  const postId = req.params.id;
+
+  Comment.find({ post: postId })
+    .populate('author')
+    .then((comments) => {
+      res.status(200).json(comments);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+// RETRIEVE SINGLE BLOG POST FROM BLOG FEED
 router.get('/blog-feed/:id', (req, res, next) => {
   const postId = req.params.id;
 
@@ -129,6 +144,33 @@ router.get('/blog-feed/:id', (req, res, next) => {
     });
 });
 
+// FOR POSTING COMMENTS ON INDIVIDUAL BLOG POSTS
+router.post('/blog-feed/:id/comments', (req, res, next) => {
+  const postId = req.params.id;
+  Post.findById(postId)
+    .then((post) => {
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+      const commentData = {
+        post: postId,
+        author: req.payload._id,
+        text: req.body.text,
+      };
+
+      return Comment.create(commentData);
+    })
+    .then((comment) => {
+      return Comment.populate(comment, { path: 'author' });
+    })
+    .then((populatedComment) => {
+      res.status(200).json(populatedComment);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
 router.post('/upload', fileUploader.single('imgUrl'), (req, res, next) => {
   if (!req.file) {
     next(new Error('No file uploaded!'));
@@ -138,8 +180,6 @@ router.post('/upload', fileUploader.single('imgUrl'), (req, res, next) => {
   console.log('Server side fileUrl', responseObject);
   res.json({ fileUrl: req.file.path });
 });
-
-// SEARCH ROUTE
 
 // UPLOADING USER PROFILE PIC TO DASHBOARD
 
