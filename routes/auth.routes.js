@@ -75,7 +75,7 @@ router.post('/login', (req, res, next) => {
     .then((foundUser) => {
       if (!foundUser) {
         // If the user is not found, send an error response
-        res.status(401).json({ message: 'User not found.' });
+        res.status(401).json({ message: 'User not found. Unable to login. Check that your email and password are correct!' });
         return;
       }
 
