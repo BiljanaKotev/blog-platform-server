@@ -9,10 +9,19 @@ const app = express();
 const cors = require('cors');
 
 // 👇 Configure CORS
+
+const whitelist = ['http://localhost:3000', 'https://travelhub-blog-platform.netlify.app'];
 const corsOptions = {
-  origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200,
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      // !origin allows requests without a set "origin" like Postman or mobile browsers.
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
 };
+
 app.use(cors(corsOptions));
 
 require('./config')(app);
@@ -39,4 +48,3 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
-
