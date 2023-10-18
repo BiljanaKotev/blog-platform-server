@@ -205,6 +205,7 @@ router.delete('/blog-feed/:postId/comments/:commentId', (req, res, next) => {
       }
     })
     .catch((err) => {
+      che;
       next(err);
     });
 });
