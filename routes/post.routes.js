@@ -210,8 +210,8 @@ router.delete('/blog-feed/:postId/comments/:commentId', (req, res, next) => {
 });
 
 router.post('/upload', fileUploader.single('imgUrl'), (req, res, next) => {
+  console.error('No file uploaded!');
   if (!req.file) {
-    console.error('No file uploaded!');
     return res.status(400).send('No file uploaded');
   }
   const responseObject = { fileUrl: req.file.path };

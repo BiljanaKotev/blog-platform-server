@@ -71,6 +71,7 @@ app.use('/api', isAuthenticated, postRoutes);
 require('./error-handling')(app);
 
 app.use((err, req, res, next) => {
+  console.error('Generic Error Handler:', err.message);
   if (err.name === 'UnauthorizedError') {
     res.status(401).send('Invalid token...');
   } else {
