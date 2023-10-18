@@ -10,19 +10,26 @@ const cors = require('cors');
 
 // 👇 Configure CORS
 
-const whitelist = ['http://localhost:3000', 'https://travelhub-blog-platform.netlify.app'];
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      // !origin allows requests without a set "origin" like Postman or mobile browsers.
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-};
+// const whitelist = ['http://localhost:3000', 'https://travelhub-blog-platform.netlify.app'];
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1 || !origin) {
+//       // !origin allows requests without a set "origin" like Postman or mobile browsers.
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+
+app.use(
+  cors({
+    origin: 'https://travelhub-blog-platform.netlify.app',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 
 require('./config')(app);
 

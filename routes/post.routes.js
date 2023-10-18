@@ -20,13 +20,17 @@ router.get('/dashboard', (req, res, next) => {
 });
 
 router.post('/create-post', (req, res, next) => {
+  console.log('Incoming data:', req.body);
+
   const { coverImg, title, location, content, author } = req.body;
+
   Post.create({ coverImg, title, location, content, author })
     .then((newPost) => {
       console.log('newpost', newPost);
       res.status(200).json(newPost);
     })
     .catch((err) => {
+      console.error('Error:', err);
       next(err);
     });
 });
@@ -207,8 +211,8 @@ router.delete('/blog-feed/:postId/comments/:commentId', (req, res, next) => {
 
 router.post('/upload', fileUploader.single('imgUrl'), (req, res, next) => {
   if (!req.file) {
-    next(new Error('No file uploaded!'));
-    return;
+    console.error('No file uploaded!');
+    return res.status(400).send('No file uploaded');
   }
   const responseObject = { fileUrl: req.file.path };
   console.log('Server side fileUrl', responseObject);
@@ -218,6 +222,7 @@ router.post('/upload', fileUploader.single('imgUrl'), (req, res, next) => {
 // UPLOADING USER PROFILE PIC TO DASHBOARD
 
 router.post('/update-user-profile-pic', (req, res) => {
+  console.log('Reached /upload route');
   const { userId, profilePicUrl } = req.body;
 
   User.findById(userId)

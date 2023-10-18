@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const transporter = require('../config/transporter.config');
 
 router.get('/', (req, res, next) => {
   res.json('All good in here');
