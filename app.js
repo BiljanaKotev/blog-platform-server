@@ -12,49 +12,6 @@ const cors = require('cors');
 
 app.use(cors());
 
-// const allowedOrigins = [
-//   'http://localhost:3000',
-//   'https://travelhub-blog-platform.netlify.app',
-//   // ... any other origins you might use
-// ];
-
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       if (!origin) return callback(null, true); // allow requests with no origin
-//       if (allowedOrigins.indexOf(origin) === -1) {
-//         const msg = 'The CORS policy for this site does not allow access from the specified origin.';
-//         return callback(new Error(msg), false);
-//       }
-//       return callback(null, true);
-//     },
-//     allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control'], // <-- Add 'Cache-Control' here
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'], // specify the methods you want to allow
-//     credentials: true,
-//   })
-// );
-
-// const whitelist = ['http://localhost:3000', 'https://travelhub-blog-platform.netlify.app'];
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (whitelist.indexOf(origin) !== -1 || !origin) {
-//       // !origin allows requests without a set "origin" like Postman or mobile browsers.
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-// };
-
-// app.use(cors(corsOptions));
-
-// app.use(
-//   cors({
-//     origin: 'https://travelhub-blog-platform.netlify.app',
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//   })
-// );
-
 require('./config')(app);
 
 // 👇 Start handling routes here
