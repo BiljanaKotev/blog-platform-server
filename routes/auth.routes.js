@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
+const avatar = 'https://i.postimg.cc/zGYtKmMM/avatar.png';
 
 const { isAuthenticated } = require('../middleware/jwt.middleware.js');
 
@@ -43,7 +44,7 @@ router.post('/signup', (req, res, next) => {
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`
       // these keys email, passwordHash: hashedPassword, name are coming from the UserSchema!
-      return User.create({ email, passwordHash: hashedPassword, name });
+      return User.create({ email, passwordHash: hashedPassword, name, profilePicUrl: avatar });
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
@@ -117,4 +118,3 @@ router.get('/verify', isAuthenticated, (req, res, next) => {
 });
 
 module.exports = router;
-
