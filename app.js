@@ -21,6 +21,9 @@ app.use('/api', indexRoutes);
 const authRoutes = require('./routes/auth.routes');
 app.use('/auth', authRoutes);
 
+const commentRoutes = require('./routes/comment.routes');
+app.use('/api', isAuthenticated, commentRoutes);
+
 const postRoutes = require('./routes/post.routes');
 app.use('/api', isAuthenticated, postRoutes);
 
