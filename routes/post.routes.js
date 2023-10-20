@@ -116,20 +116,6 @@ router.get('/blog-feed', (req, res, next) => {
     });
 });
 
-// RETRIEVE COMMENTS FROM SINGLE BLOG POST
-router.get('/blog-feed/:id/comments', (req, res, next) => {
-  const postId = req.params.id;
-
-  Comment.find({ post: postId })
-    .populate('author')
-    .then((comments) => {
-      res.status(200).json(comments);
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
-
 // RETRIEVE SINGLE BLOG POST FROM BLOG FEED
 router.get('/blog-feed/:id', (req, res, next) => {
   const postId = req.params.id;
@@ -144,68 +130,6 @@ router.get('/blog-feed/:id', (req, res, next) => {
       }
     })
     .catch((err) => {
-      next(err);
-    });
-});
-
-// FOR POSTING COMMENTS ON INDIVIDUAL BLOG POSTS
-router.post('/blog-feed/:id/comments', (req, res, next) => {
-  const postId = req.params.id;
-  Post.findById(postId)
-    .then((post) => {
-      if (!post) {
-        return res.status(404).json({ error: 'Post not found' });
-      }
-      const commentData = {
-        post: postId,
-        author: req.payload._id,
-        text: req.body.text,
-      };
-
-      return Comment.create(commentData);
-    })
-    .then((comment) => {
-      return Comment.populate(comment, { path: 'author' });
-    })
-    .then((populatedComment) => {
-      res.status(200).json(populatedComment);
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-// EDIT USER COMMENT
-router.put('/blog-feed/:postId/comments/:commentId', (req, res, next) => {
-  const { commentId } = req.params;
-  const { text } = req.body;
-
-  Comment.findByIdAndUpdate(commentId, { text }, { new: true })
-    .then((updatedComment) => {
-      if (!updatedComment) {
-        return res.status(404).json({ message: 'Comment not found' });
-      }
-      res.json(updatedComment);
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-// DELETE USER COMMENT
-router.delete('/blog-feed/:postId/comments/:commentId', (req, res, next) => {
-  const { commentId } = req.params;
-
-  Comment.findByIdAndDelete(commentId)
-    .then((userComment) => {
-      if (userComment) {
-        res.status(200).json({ message: 'Comment deleted successfully' });
-      } else {
-        res.status(404).json({ message: 'Comment not found' });
-      }
-    })
-    .catch((err) => {
-      che;
       next(err);
     });
 });
