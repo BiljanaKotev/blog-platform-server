@@ -10,7 +10,8 @@ router.get('/dashboard', (req, res, next) => {
   if (!req.payload) {
     return res.status(400).send('Unauthorized');
   }
-  Post.find({ author: req.payload._id })
+  const userId = req.payload._id;
+  Post.find({ author: userId })
     .then((dashboard) => {
       res.json(dashboard);
     })
@@ -20,17 +21,13 @@ router.get('/dashboard', (req, res, next) => {
 });
 
 router.post('/create-post', (req, res, next) => {
-  console.log('Incoming data:', req.body);
-
   const { coverImg, title, location, content, author } = req.body;
 
   Post.create({ coverImg, title, location, content, author })
     .then((newPost) => {
-      console.log('newpost', newPost);
       res.status(200).json(newPost);
     })
     .catch((err) => {
-      console.error('Error:', err);
       next(err);
     });
 });
@@ -163,6 +160,7 @@ router.post('/update-user-profile-pic', (req, res) => {
       res.status(200).json({ message: 'Profile picture updated successfully' });
     })
     .catch((error) => {
+      console.error('Error while updating profile picture:', error);
       res.status(500).json({ message: 'Error updating profile picture' });
     });
 });
